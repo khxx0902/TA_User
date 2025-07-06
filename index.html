@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi UKM PSM Sunshine Voice</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons for modern icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <!-- AOS (Animate On Scroll) Library -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <style>
+        /* Menggunakan font Inter sebagai default */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Latar belakang gradien yang lebih terlihat */
+            background-color: #f8fafc; /* Fallback color */
+            background-image: linear-gradient(180deg, #e0f2fe 0%, #f8fafc 100%); /* Gradient dari sky-100 ke slate-50 */
+        }
+
+        /* Style untuk transisi antar halaman agar lebih mulus */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0; /* slate-200 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8; /* slate-400 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b; /* slate-500 */
+        }
+
+        /* Latar belakang Hero Section dengan gambar */
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1593697821252-1c21fee57d29?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Utility for line clamping */
+        .line-clamp-3 {
+         overflow: hidden;
+         display: -webkit-box;
+         -webkit-box-orient: vertical;
+         -webkit-line-clamp: 3;
+        }
+
+        /* Mencegah animasi AOS yang berkedip saat halaman dimuat */
+        [data-aos] {
+            opacity: 0;
+            transition-property: transform, opacity;
+        }
+
+        /* Gradient Button Style - Original Blue Palette */
+        .btn-gradient {
+            background-image: linear-gradient(to right, #38bdf8, #4f46e5); /* sky-400 to indigo-600 */
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            box-shadow: 0 0 20px #4f46e560;
+        }
+
+        /* Styling untuk link navigasi yang aktif di navbar baru */
+        .nav-link.active {
+            color: #ffffff; /* White */
+            font-weight: 600;
+            opacity: 1;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        
+        /* Styling untuk konten artikel */
+        .article-content p {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+        }
+        .article-content h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Custom file input */
+        .file-input-label {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            background-color: #f1f5f9; /* slate-200 */
+            color: #475569; /* slate-600 */
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+            border: 2px dashed #cbd5e1; /* slate-300 */
+        }
+        .file-input-label:hover {
+            background-color: #e2e8f0; /* slate-300 */
+        }
+        .file-input-filename {
+            margin-left: 1rem;
+            font-style: italic;
+            color: #64748b; /* slate-500 */
+        }
+
+        /* --- NEW: Lightbox Styles --- */
+        .lightbox {
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+        .lightbox-content {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <!-- Header and Navigation Bar with Gradient Background -->
+    <header class="sticky top-0 z-50 text-white shadow-lg bg-gradient-to-r from-sky-500 to-indigo-600">
+        <div class="container flex items-center justify-between px-6 py-4 mx-auto">
+            <a href="#" class="flex items-center space-x-3" onclick="switchPage('home')">
+                <img src="https://pbs.twimg.com/profile_images/735053432403283968/RBGDrLXf_400x400.jpg" alt="Logo PSM SSV UMY" class="w-10 h-10 border-2 border-white rounded-full">
+                <span class="text-xl font-bold">PSM Sunshine Voice UMY</span>
+            </a>
+            <nav class="items-center hidden space-x-8 md:flex">
+                <a href="#" class="transition opacity-90 nav-link hover:opacity-100" data-page="home" onclick="switchPage('home')">Beranda</a>
+                <a href="#" class="transition opacity-90 nav-link hover:opacity-100" data-page="berita" onclick="switchPage('berita')">Berita</a>
+                <a href="#" class="transition opacity-90 nav-link hover:opacity-100" data-page="gallery" onclick="switchPage('gallery')">Galeri</a>
+                <a href="#" class="transition opacity-90 nav-link hover:opacity-100" data-page="pengumuman" onclick="switchPage('pengumuman')">Pengumuman</a>
+                <a href="#" class="transition opacity-90 nav-link hover:opacity-100" data-page="events" onclick="switchPage('events')">Event</a>
+                <!-- Dropdown Menu Pendaftaran -->
+                <div class="relative" id="dropdown-container">
+                    <button id="dropdown-button" class="flex items-center transition opacity-90 nav-link hover:opacity-100" data-page-parent="pendaftaran">
+                        Pendaftaran
+                        <i data-feather="chevron-down" class="w-4 h-4 ml-1"></i>
+                    </button>
+                    <div id="dropdown-menu" class="absolute right-0 z-20 hidden w-56 py-1 mt-2 bg-white border rounded-md shadow-lg text-slate-700 border-slate-200">
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-sky-50 hover:text-sky-700" data-page="form-pendaftaran" onclick="handleDropdownLinkClick('form-pendaftaran')">Daftar Anggota Baru</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-sky-50 hover:text-sky-700" data-page="cek-status" onclick="handleDropdownLinkClick('cek-status')">Cek Status Pendaftaran</a>
+                    </div>
+                </div>
+            </nav>
+            <button class="text-white md:hidden" id="mobile-menu-button">
+                <i data-feather="menu"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden bg-white/10 md:hidden" id="mobile-menu">
+            <a href="#" class="block px-4 py-2 text-sm nav-link hover:bg-white/20" data-page="home" onclick="switchPage('home')">Beranda</a>
+            <a href="#" class="block px-4 py-2 text-sm nav-link hover:bg-white/20" data-page="berita" onclick="switchPage('berita')">Berita</a>
+            <a href="#" class="block px-4 py-2 text-sm nav-link hover:bg-white/20" data-page="gallery" onclick="switchPage('gallery')">Galeri</a>
+            <a href="#" class="block px-4 py-2 text-sm nav-link hover:bg-white/20" data-page="pengumuman" onclick="switchPage('pengumuman')">Pengumuman</a>
+            <a href="#" class="block px-4 py-2 text-sm nav-link hover:bg-white/20" data-page="events" onclick="switchPage('events')">Event</a>
+            <a href="#" class="block px-4 py-2 text-sm nav-link hover:bg-white/20" data-page="form-pendaftaran" onclick="switchPage('form-pendaftaran')">Daftar Anggota Baru</a>
+            <a href="#" class="block px-4 py-2 text-sm nav-link hover:bg-white/20" data-page="cek-status" onclick="switchPage('cek-status')">Cek Status Pendaftaran</a>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <!-- Home Page -->
+        <section id="home" class="page active">
+            <!-- Hero Section -->
+            <div class="text-white hero-bg" style="background-image: url('cover1.jpg'); background-size: cover; background-position: center;">
+                <div class="bg-black bg-opacity-60 min-h-[60vh] flex items-center">
+                    <div class="container px-6 mx-auto text-center">
+                        <h1 class="mb-4 text-4xl font-bold leading-tight md:text-6xl" data-aos="fade-up">Paduan Suara Mahasiswa Sunshine Voice UMY</h1>
+                        <p class="max-w-3xl mx-auto mb-8 text-lg text-sky-200 md:text-xl" data-aos="fade-up" data-aos-delay="200">Jelajahi kegiatan seru kami, ikuti event menarik, dan bergabunglah dengan keluarga besar Paduan Suara Mahasiswa Sunshine Voice</p>
+                        <div class="flex flex-wrap justify-center gap-4" data-aos="fade-up" data-aos-delay="400">
+                            <button onclick="switchPage('events')" class="px-8 py-3 font-bold text-white transition transform rounded-lg shadow-lg btn-gradient hover:scale-105">Lihat Event</button>
+                            <button onclick="switchPage('form-pendaftaran')" class="px-8 py-3 font-bold text-white transition transform bg-transparent border-2 border-white rounded-lg shadow-lg hover:bg-white hover:text-slate-900 hover:scale-105">Gabung Sekarang</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <section class="py-16 overflow-hidden">
+                <div class="container grid items-center gap-12 px-6 mx-auto md:grid-cols-2">
+                    <div data-aos="fade-right"><img src="cover5.jpg" alt="Tim Paduan Suara Sunshine Voice sedang berlatih" class="w-full shadow-xl rounded-xl"></div>
+                    <div data-aos="fade-left" class="p-8 glass-card rounded-xl">
+                        <h2 class="mb-4 text-3xl font-bold text-slate-800">Tentang UKM PSM Sunshine Voice</h2>
+                        <p class="mb-4 text-slate-600">Sunshine Voice adalah Unit Kegiatan Mahasiswa (UKM) Paduan Suara Mahasiswa yang menjadi wadah bagi mahasiswa untuk menyalurkan minat dan bakat di bidang tarik suara. Kami tidak hanya belajar teknik vokal, tetapi juga membangun karakter, kerjasama tim, dan rasa kekeluargaan yang erat.</p>
+                        <p class="text-slate-600">Sejak didirikan, kami telah aktif berpartisipasi dalam berbagai acara universitas, kompetisi regional, hingga panggung nasional.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Events & Registration Section -->
+            <section class="py-16">
+                 <div class="container px-6 mx-auto text-center">
+                    <h2 class="mb-8 text-3xl font-bold text-slate-800" data-aos="fade-up">Event & Pendaftaran Terbaru</h2>
+                    <div class="grid max-w-4xl gap-8 mx-auto md:grid-cols-2">
+                        <!-- Event Card -->
+                        <div class="flex flex-col items-center p-8 text-center transition-transform duration-300 transform glass-card rounded-xl hover:-translate-y-2" data-aos="fade-up">
+                            <i data-feather="mic" class="w-12 h-12 mx-auto mb-4 text-sky-500"></i>
+                            <h3 class="mb-2 text-xl font-bold">Konser Tahunan "Harmoni Senja"</h3>
+                            <p class="mb-4 text-slate-600">Jangan lewatkan pertunjukan spektakuler kami tahun ini. Tiket tersedia sekarang!</p>
+                            <button onclick="switchPage('event-detail')" class="w-full px-4 py-2 mt-auto font-bold text-white transition rounded-lg btn-gradient">Lihat Detail Konser</button>
+                        </div>
+                        <!-- Registration Card -->
+                        <div class="flex flex-col items-center p-8 text-center transition-transform duration-300 transform glass-card rounded-xl hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
+                             <i data-feather="user-plus" class="w-12 h-12 mx-auto mb-4 text-sky-500"></i>
+                            <h3 class="mb-2 text-xl font-bold">Pendaftaran Anggota Baru</h3>
+                            <p class="mb-4 text-slate-600">Jadilah bagian dari keluarga kami. Pendaftaran untuk angkatan baru telah dibuka.</p>
+                             <button onclick="switchPage('form-pendaftaran')" class="w-full px-4 py-2 mt-auto font-bold text-white transition rounded-lg bg-slate-700 hover:bg-slate-800">Daftar Sekarang</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Latest News Section -->
+            <section class="py-16">
+                <div class="container px-6 mx-auto">
+                    <h2 class="mb-8 text-3xl font-bold text-center text-slate-800" data-aos="fade-up">Berita Terbaru</h2>
+                    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                        <div class="overflow-hidden transition-transform duration-300 transform glass-card rounded-xl hover:-translate-y-2" data-aos="fade-up"><img src="event.jpg" class="object-cover w-full h-48 rounded-t-xl" alt="Paduan suara memenangkan penghargaan"><div class="p-6"><span class="text-sm font-semibold text-sky-600">KOMPETISI</span><h3 class="my-2 text-xl font-bold">Raih Juara 1 di Festival Nasional</h3><p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 20 Juli 2025</p><p class="mb-4 text-slate-700 line-clamp-3">Sunshine Voice berhasil membawa pulang piala Juara Pertama dalam ajang Festival Paduan Suara Nasional 2025...</p><button onclick="openBeritaDetail('fest-nasional-2025')" class="font-semibold transition-colors text-sky-600 hover:text-sky-700">Baca Selengkapnya &rarr;</button></div></div>
+                        <div class="overflow-hidden transition-transform duration-300 transform glass-card rounded-xl hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100"><img src="pendaftaran.jpg" class="object-cover w-full h-48 rounded-t-xl" alt="Poster audisi paduan suara"><div class="p-6"><span class="text-sm font-semibold text-sky-600">PENDAFTARAN</span><h3 class="my-2 text-xl font-bold">Audisi Batch 27</h3><p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 15 Juni 2025</p><p class="mb-4 text-slate-700 line-clamp-3">Kami membuka pintu bagi talenta-talenta baru untuk bergabung! Audisi akan dilaksanakan pada awal semester ganjil...</p><button onclick="openBeritaDetail('audisi-2025')" class="font-semibold transition-colors text-sky-600 hover:text-sky-700">Baca Selengkapnya &rarr;</button></div></div>
+                        <div class="overflow-hidden transition-transform duration-300 transform glass-card rounded-xl hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200"><img src="kolaborasi.jpg" class="object-cover w-full h-48 rounded-t-xl" alt="Paduan suara berkolaborasi dengan orkestra"><div class="p-6"><span class="text-sm font-semibold text-sky-600">EVENT</span><h3 class="my-2 text-xl font-bold">Kolaborasi dengan Orkestra Kota</h3><p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 5 Mei 2025</p><p class="mb-4 text-slate-700 line-clamp-3">Sebuah kehormatan bagi kami untuk bisa berkolaborasi dalam sebuah konser megah bersama orkestra ternama...</p><button onclick="openBeritaDetail('kolaborasi-orkestra')" class="font-semibold transition-colors text-sky-600 hover:text-sky-700">Baca Selengkapnya &rarr;</button></div></div>
+                    </div>
+                    <div class="mt-12 text-center" data-aos="fade-up"><button onclick="switchPage('berita')" class="px-8 py-3 font-bold text-white transition rounded-lg shadow-lg btn-gradient">Lihat Semua Berita</button></div>
+                </div>
+            </section>
+            
+            <!-- Gallery Preview Section -->
+            <section class="py-16">
+                <div class="container px-6 mx-auto">
+                    <h2 class="mb-8 text-3xl font-bold text-center text-slate-800" data-aos="fade-up">Cuplikan Galeri</h2>
+                    <div class="grid grid-cols-2 gap-4 md:grid-cols-4 gallery-container">
+                        <div class="overflow-hidden rounded-lg shadow-md cursor-pointer" data-aos="zoom-in-up">
+                            <img src="galeri1.jpg" alt="Foto galeri paduan suara 1" class="object-cover w-full h-full transition duration-300 transform hover:scale-105" data-caption="Milad PSM Sunshine Voice UMY.">
+                        </div>
+                        <div class="overflow-hidden rounded-lg shadow-md cursor-pointer" data-aos="zoom-in-up" data-aos-delay="100">
+                            <img src="galeri2.jpg" alt="Foto galeri paduan suara 2" class="object-cover w-full h-full transition duration-300 transform hover:scale-105" data-caption="Penampilan Di Opening Festival Swara Saraswati.">
+                        </div>
+                        <div class="overflow-hidden rounded-lg shadow-md cursor-pointer" data-aos="zoom-in-up" data-aos-delay="200">
+                            <img src="galeri3.jpg" alt="Foto galeri paduan suara 3" class="object-cover w-full h-full transition duration-300 transform hover:scale-105" data-caption="Penampilan dalam lomba kategori musica sacra.">
+                        </div>
+                        <div class="overflow-hidden rounded-lg shadow-md cursor-pointer" data-aos="zoom-in-up" data-aos-delay="300">
+                            <img src="galeri4.jpg" alt="Foto galeri paduan suara 4" class="object-cover w-full h-full transition duration-300 transform hover:scale-105" data-caption="Penampilan dalam lomba kategori folklore.">
+                        </div>
+                    </div>
+                    <div class="mt-12 text-center" data-aos="fade-up"><button onclick="switchPage('gallery')" class="px-8 py-3 font-bold text-white transition rounded-lg shadow-lg bg-slate-800 hover:bg-slate-900">Lihat Galeri Lengkap</button></div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Events Page -->
+        <section id="events" class="container p-4 mx-auto page md:p-8">
+            <h2 class="mb-6 text-3xl font-bold text-center">Event & Konser Mendatang</h2>
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Event 1 -->
+                <div class="flex flex-col overflow-hidden transition duration-300 transform glass-card rounded-xl hover:-translate-y-2">
+                    <img src="shinergy.jpg" alt="Poster Konser Harmoni" class="object-cover w-full h-48 rounded-t-xl">
+                    <div class="flex flex-col flex-grow p-6">
+                        <h3 class="mb-2 text-xl font-bold">Konser Pre-Competition Shinergy #1"</h3>
+                        <p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 25 Agustus 2025</p>
+                        <p class="flex-grow mb-4 text-slate-700">Nikmati alunan merdu dari Sunshine Voice dalam konser pre-competition kami yang spektakuler.</p>
+                        <button onclick="switchPage('event-detail')" class="w-full px-4 py-2 mt-auto font-bold text-white transition rounded-lg btn-gradient">Lihat Detail</button>
+                    </div>
+                </div>
+                <!-- Event 2 -->
+                <div class="flex flex-col overflow-hidden transition duration-300 transform glass-card rounded-xl hover:-translate-y-2">
+                    <img src="saraya.jpg" alt="Poster Konser Amal" class="object-cover w-full h-48 rounded-t-xl">
+                    <div class="flex flex-col flex-grow p-6">
+                        <h3 class="mb-2 text-xl font-bold">Konser Tahunan "SARAYA #1"</h3>
+                        <p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 15 September 2025</p>
+                        <p class="flex-grow mb-4 text-slate-700">Bergabunglah dalam malam konser tahunan yang megah ini.</p>
+                        <button onclick="switchPage('event-detail')" class="w-full px-4 py-2 mt-auto font-bold text-white transition rounded-lg btn-gradient">Lihat Detail</button>
+                    </div>
+                </div>
+                 <!-- Event 3 (Past) -->
+                <div class="flex flex-col overflow-hidden opacity-60 glass-card rounded-xl">
+                    <img src="harmony.jpg" alt="Poster Konser Lama" class="object-cover w-full h-48 rounded-t-xl">
+                    <div class="flex flex-col flex-grow p-6">
+                        <h3 class="mb-2 text-xl font-bold">Konser "My Harmony"</h3>
+                        <p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 10 April 2025</p>
+                        <p class="flex-grow mb-4 text-slate-700">Sebuah konser yang merayakan kekayaan musik daerah dari seluruh Indonesia.</p>
+                        <button class="w-full px-4 py-2 mt-auto font-bold text-white bg-gray-400 rounded-lg cursor-not-allowed">Event Selesai</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Detail Page -->
+        <section id="event-detail" class="container p-4 mx-auto page md:p-8">
+            <div class="mb-6"><button onclick="switchPage('events')" class="flex items-center font-semibold text-slate-600 hover:text-sky-600"><i data-feather="arrow-left" class="w-5 h-5 mr-2"></i>Kembali ke Daftar Event</button></div>
+            <div class="grid gap-8 lg:grid-cols-3 lg:gap-12">
+                <div class="lg:col-span-1"><img src="shinergy.jpg" alt="Poster Konser Harmoni Senja" class="w-full shadow-lg rounded-xl"></div>
+                <div class="lg:col-span-2">
+                    <h2 class="mb-2 text-3xl font-bold text-slate-800 md:text-4xl">Konser Shinergy #1"</h2>
+                    <p class="mb-6 text-lg text-slate-500">oleh <span class="font-semibold text-sky-600">Sunshine Voice</span></p>
+                    <div class="grid gap-6 p-4 mb-6 border rounded-lg sm:grid-cols-2 bg-slate-100 border-slate-200">
+                        <div><p class="flex items-center mb-1 text-sm font-medium text-slate-500"><i data-feather="map-pin" class="w-4 h-4 mr-2"></i> Lokasi</p><p class="font-semibold text-slate-700">Aula Serbaguna Universitas</p></div>
+                        <div><p class="flex items-center mb-1 text-sm font-medium text-slate-500"><i data-feather="calendar" class="w-4 h-4 mr-2"></i> Tanggal & Waktu</p><p class="font-semibold text-slate-700">25 Agustus 2025, 19:00 WIB</p></div>
+                    </div>
+                    <div class="flex flex-col items-center justify-between p-6 mb-8 bg-white border shadow-md sm:flex-row rounded-xl border-slate-200">
+                        <div><p class="text-sm text-slate-500">Harga Tiket Mulai</p><p class="text-3xl font-bold text-sky-600">Rp75.000</p></div>
+                        <button onclick="switchPage('ticket-selection')" class="w-full px-8 py-3 mt-4 font-bold text-white transition transform rounded-lg shadow-lg sm:w-auto sm:mt-0 btn-gradient hover:scale-105">Beli Tiket</button>
+                    </div>
+                    <div>
+                        <h3 class="pb-2 mb-4 text-2xl font-bold border-b-2 border-sky-400">Deskripsi Event</h3>
+                        <div class="space-y-4 leading-relaxed text-slate-700"><p>Nikmati alunan merdu dari Sunshine Voice dalam konser tahunan kami yang spektakuler. Sebuah persembahan musik klasik dan modern yang akan memanjakan telinga Anda.</p><p>Acara ini merupakan puncak dari latihan keras kami sepanjang tahun, menampilkan repertoar lagu-lagu pilihan yang telah diaransemen secara khusus. Jangan lewatkan malam penuh harmoni dan keindahan vokal ini. Dapatkan tiket Anda sekarang juga dan jadilah saksi dari sebuah pergelaran musik yang tak terlupakan!</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ticket Selection Page -->
+        <section id="ticket-selection" class="container p-4 mx-auto page md:p-8">
+            <div class="mb-6"><button onclick="switchPage('event-detail')" class="flex items-center font-semibold text-slate-600 hover:text-sky-600"><i data-feather="arrow-left" class="w-5 h-5 mr-2"></i>Kembali ke Detail Event</button></div>
+            <div class="grid gap-8 lg:grid-cols-3">
+                <!-- Ticket Options -->
+                <div class="space-y-6 lg:col-span-2" id="ticket-list">
+                    <div>
+                        <h2 class="text-3xl font-bold text-slate-800">Pilih Tiket</h2>
+                        <p class="mt-1 text-slate-500">Konser "Shinergy #1"</p>
+                    </div>
+                    <!-- Ticket Card: Regular -->
+                    <div class="flex items-center justify-between p-6 bg-white border shadow-md rounded-xl border-slate-200">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800">Presale 1</h3>
+                            <p class="text-lg font-semibold text-sky-600">Rp75.000</p>
+                            <p class="flex items-center mt-1 text-sm text-green-600"><i data-feather="check-circle" class="w-4 h-4 mr-1"></i>Tiket Tersedia</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <button data-ticket="regular" data-action="minus" class="w-10 h-10 font-bold transition rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300">-</button>
+                            <span id="quantity-regular" class="w-8 text-xl font-bold text-center">0</span>
+                            <button data-ticket="regular" data-action="plus" class="w-10 h-10 font-bold text-white transition rounded-full bg-sky-400 hover:bg-sky-500">+</button>
+                        </div>
+                    </div>
+                     <!-- Ticket Card: VIP -->
+                    <div class="flex items-center justify-between p-6 bg-white border shadow-md rounded-xl border-slate-200">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800">Presale 2</h3>
+                            <p class="text-lg font-semibold text-sky-600">Rp150.000</p>
+                            <p class="flex items-center mt-1 text-sm text-green-600"><i data-feather="check-circle" class="w-4 h-4 mr-1"></i>Tiket Tersedia</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <button data-ticket="vip" data-action="minus" class="w-10 h-10 font-bold transition rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300">-</button>
+                            <span id="quantity-vip" class="w-8 text-xl font-bold text-center">0</span>
+                            <button data-ticket="vip" data-action="plus" class="w-10 h-10 font-bold text-white transition rounded-full bg-sky-400 hover:bg-sky-500">+</button>
+                        </div>
+                    </div>
+                     <!-- Ticket Card: Sold Out -->
+                    <div class="flex items-center justify-between p-6 shadow-sm rounded-xl bg-slate-100 opacity-70">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-500">Presale 3</h3>
+                            <p class="text-lg font-semibold text-slate-500">Rp250.000</p>
+                            <p class="flex items-center mt-1 text-sm text-red-600"><i data-feather="x-circle" class="w-4 h-4 mr-1"></i>Tiket Habis</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <p class="font-semibold text-slate-500">Tidak Tersedia</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Order Summary -->
+                <div class="lg:col-span-1">
+                    <div class="sticky p-6 bg-white border shadow-lg rounded-xl border-slate-200 top-28">
+                        <h3 class="pb-3 mb-4 text-2xl font-bold border-b text-slate-800 border-slate-200">Detail Pemesanan</h3>
+                        <div id="order-summary-items" class="space-y-3 mb-4 min-h-[60px]">
+                            <p class="text-slate-500">Belum ada tiket yang dipilih.</p>
+                        </div>
+                        <div class="pt-4 space-y-2 border-t border-slate-200">
+                            <div class="flex justify-between font-semibold text-slate-600">
+                                <p>Total</p>
+                                <p id="total-price">Rp0</p>
+                            </div>
+                        </div>
+                        <button id="to-checkout-button" class="w-full py-3 mt-6 font-bold text-white transition rounded-lg shadow-lg btn-gradient disabled:bg-slate-400 disabled:cursor-not-allowed disabled:bg-none" disabled>Lanjutkan</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout Page -->
+        <section id="checkout-page" class="container p-4 mx-auto page md:p-8">
+            <div class="mb-6"><button onclick="switchPage('ticket-selection')" class="flex items-center font-semibold text-slate-600 hover:text-sky-600"><i data-feather="arrow-left" class="w-5 h-5 mr-2"></i>Kembali ke Pilih Tiket</button></div>
+              <div class="grid gap-8 lg:grid-cols-3">
+                <!-- Attendee Details Form -->
+                <div class="lg:col-span-2">
+                      <div>
+                        <h2 class="text-3xl font-bold text-slate-800">Detail Pembeli</h2>
+                        <p class="mt-1 text-slate-500">Untuk menyelesaikan pemesanan, silakan lengkapi formulir di bawah.</p>
+                    </div>
+                    <form id="checkoutForm" class="p-8 mt-6 space-y-6 glass-card rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <i data-feather="user" class="w-8 h-8 text-sky-500"></i>
+                            <h3 class="text-2xl font-bold text-slate-800">Informasi Kontak</h3>
+                        </div>
+                        <div>
+                            <label for="checkout-name" class="block text-sm font-medium text-slate-700">Nama Lengkap *</label>
+                            <input type="text" id="checkout-name" placeholder="Sesuai KTP/Paspor" class="block w-full px-3 py-2 mt-1 bg-white border rounded-md shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required>
+                        </div>
+                         <div>
+                            <label for="checkout-email" class="block text-sm font-medium text-slate-700">Email *</label>
+                            <input type="email" id="checkout-email" placeholder="E-ticket akan dikirim ke email ini" class="block w-full px-3 py-2 mt-1 bg-white border rounded-md shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required>
+                        </div>
+                         <div>
+                            <label for="checkout-phone" class="block text-sm font-medium text-slate-700">Nomor HP *</label>
+                            <input type="tel" id="checkout-phone" placeholder="Contoh: 08123456789" class="block w-full px-3 py-2 mt-1 bg-white border rounded-md shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required>
+                        </div>
+                        <div>
+                            <label for="checkout-id" class="block text-sm font-medium text-slate-700">Nomor KTP/Paspor *</label>
+                            <input type="text" id="checkout-id" placeholder="Wajib diisi untuk verifikasi" class="block w-full px-3 py-2 mt-1 bg-white border rounded-md shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required>
+                        </div>
+                    </form>
+                </div>
+                <!-- Order Summary -->
+                <div class="lg:col-span-1">
+                    <div class="sticky p-6 glass-card rounded-xl top-28">
+                        <h3 class="pb-3 mb-4 text-2xl font-bold border-b text-slate-800 border-slate-200">Ringkasan Pesanan</h3>
+                        <div id="checkout-summary-items" class="mb-4 space-y-3 min-h-[60px]">
+                            <!-- Dinamis diisi oleh JS -->
+                        </div>
+                        <div class="pt-4 space-y-2 border-t border-slate-200">
+                            <div class="flex justify-between font-semibold text-slate-600">
+                                <p>Total</p>
+                                <p id="checkout-total-price">Rp0</p>
+                            </div>
+                        </div>
+                        <button type="submit" form="checkoutForm" class="w-full py-3 mt-6 font-bold text-white transition rounded-lg shadow-lg btn-gradient">Lanjutkan ke Pembayaran</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Confirmation Page -->
+        <section id="payment-confirmation" class="container p-4 mx-auto page md:p-8">
+              <div class="mb-6"><button onclick="switchPage('checkout-page')" class="flex items-center font-semibold text-slate-600 hover:text-sky-600"><i data-feather="arrow-left" class="w-5 h-5 mr-2"></i>Kembali</button></div>
+              <div class="grid gap-8 lg:grid-cols-3">
+                <!-- Main Content -->
+                <div class="space-y-6 lg:col-span-2">
+                    <div>
+                        <h2 class="text-3xl font-bold text-slate-800">Konfirmasi Pesanan</h2>
+                        <p class="mt-1 text-slate-500">Periksa kembali detail pesanan sebelum melakukan pembayaran.</p>
+                    </div>
+                    <!-- Event Summary Card -->
+                    <div class="flex items-center p-6 space-x-6 glass-card rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?q=80&w=300&auto=format&fit=crop" alt="Poster Konser" class="hidden object-cover h-32 rounded-md sm:block w-28">
+                        <div>
+                            <h3 class="mb-3 text-xl font-bold">Konser Tahunan "Harmoni Senja"</h3>
+                            <p class="flex items-center mb-2 font-semibold text-slate-700"><i data-feather="map-pin" class="w-4 h-4 mr-2 text-sky-500"></i> Aula Serbaguna Universitas</p>
+                            <p class="flex items-center font-semibold text-slate-700"><i data-feather="calendar" class="w-4 h-4 mr-2 text-sky-500"></i> 25 Agustus 2025, 19:00 WIB</p>
+                        </div>
+                    </div>
+                    <!-- Contact Info Card -->
+                    <div class="p-6 glass-card rounded-xl">
+                        <div class="flex items-center mb-4 space-x-3">
+                             <i data-feather="mail" class="w-8 h-8 text-sky-500"></i>
+                             <h3 class="text-2xl font-bold text-slate-800">Informasi Kontak</h3>
+                        </div>
+                        <p class="mb-4 text-sm text-slate-500">E-ticket akan dikirimkan ke email Anda setelah pembayaran berhasil.</p>
+                        <div class="space-y-2">
+                            <div><span class="font-semibold">Nama:</span> <span id="confirm-name"></span></div>
+                            <div><span class="font-semibold">Email:</span> <span id="confirm-email"></span></div>
+                            <div><span class="font-semibold">Nomor HP:</span> <span id="confirm-phone"></span></div>
+                            <div><span class="font-semibold">Nomor KTP:</span> <span id="confirm-id"></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="lg:col-span-1">
+                      <div class="sticky p-6 glass-card rounded-xl top-28">
+                        <h3 class="pb-3 mb-4 text-2xl font-bold border-b text-slate-800 border-slate-200">Ringkasan Pesanan</h3>
+                        <div id="confirmation-summary-items" class="mb-4 space-y-3 min-h-[60px]">
+                            <!-- Dinamis diisi oleh JS -->
+                        </div>
+                        <div class="pt-4 space-y-2 border-t border-slate-200">
+                            <div class="flex justify-between text-lg font-bold text-slate-800">
+                                <p>Total</p>
+                                <p id="confirmation-total-price">Rp0</p>
+                            </div>
+                        </div>
+                        <button id="to-payment-method-button" class="w-full py-3 mt-6 font-bold text-white transition bg-green-600 rounded-lg shadow-lg hover:bg-green-700">Pilih Metode Pembayaran</button>
+                          <div class="mt-6 space-y-2 text-xs text-slate-500">
+                            <p><i data-feather="check" class="inline-block w-3 h-3 mr-1"></i> Tiket tidak dapat dikembalikan (non-refundable).</p>
+                        </div>
+                    </div>
+                </div>
+              </div>
+        </section>
+        
+        <!-- Payment Method Page -->
+        <section id="payment-method-page" class="container p-4 mx-auto page md:p-8">
+              <div class="mb-6"><button onclick="switchPage('payment-confirmation')" class="flex items-center font-semibold text-slate-600 hover:text-sky-600"><i data-feather="arrow-left" class="w-5 h-5 mr-2"></i>Kembali</button></div>
+              <div class="grid gap-8 lg:grid-cols-3">
+                <!-- Payment Method Selection -->
+                <div class="space-y-6 lg:col-span-2">
+                      <h2 class="text-3xl font-bold text-slate-800">Metode Pembayaran</h2>
+                      <div class="p-6 glass-card rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="smartphone" class="w-6 h-6 text-sky-600"></i>
+                                <span class="text-lg font-bold" id="selected-payment-method">QRIS</span>
+                            </div>
+                            <button class="font-semibold text-sky-600 hover:text-sky-700" id="show-payment-modal-button">Lihat Semua</button>
+                        </div>
+                      </div>
+                </div>
+
+                <!-- Final Order Summary -->
+                <div class="lg:col-span-1">
+                      <div class="sticky p-6 glass-card rounded-xl top-28">
+                        <h3 class="pb-3 mb-4 text-2xl font-bold border-b text-slate-800 border-slate-200">Rincian Pembayaran</h3>
+                        <div id="payment-method-summary-items" class="mb-4 space-y-3 min-h-[60px]">
+                            <!-- Dinamis diisi oleh JS -->
+                        </div>
+                        <div class="pt-4 space-y-2 border-t border-slate-200">
+                             <div class="flex justify-between text-sm text-slate-600">
+                                <p>Subtotal</p>
+                                <p id="payment-subtotal"></p>
+                            </div>
+                            <div class="flex justify-between text-sm text-slate-600">
+                                <p>Biaya Layanan</p>
+                                <p id="payment-fee"></p>
+                            </div>
+                            <div class="flex justify-between mt-2 text-lg font-bold text-slate-800">
+                                <p>Total Bayar</p>
+                                <p id="payment-total-price"></p>
+                            </div>
+                        </div>
+                        <button id="pay-now-final-button" class="w-full py-3 mt-6 font-bold text-white transition bg-green-600 rounded-lg shadow-lg hover:bg-green-700">Bayar dengan QRIS</button>
+                    </div>
+                </div>
+              </div>
+        </section>
+        
+        <!-- QR Code Payment Page -->
+        <section id="qr-payment-page" class="container p-4 mx-auto page md:p-8">
+            <div class="max-w-md p-8 mx-auto text-center glass-card rounded-xl">
+                <h2 class="mb-2 text-2xl font-bold">Selesaikan Pembayaran</h2>
+                <p class="mb-4 text-slate-500">Pindai kode QR di bawah ini menggunakan aplikasi E-Wallet atau Mobile Banking Anda.</p>
+                <div class="inline-block p-4 bg-white border rounded-lg border-slate-200">
+                     <img src="https://placehold.co/300x300/FFFFFF/000000?text=QRIS+CODE" alt="Kode QRIS untuk Pembayaran" class="mx-auto">
+                </div>
+                <div class="my-6">
+                    <p class="text-slate-600">Total Pembayaran</p>
+                    <p class="text-3xl font-bold text-sky-600" id="qr-payment-total"></p>
+                </div>
+                <div class="p-3 text-sm rounded-lg bg-sky-100 text-sky-800">
+                    <p>Selesaikan pembayaran dalam <strong id="payment-timer">00:05</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Virtual Account Payment Page -->
+        <section id="va-payment-page" class="container p-4 mx-auto page md:p-8">
+            <div class="max-w-md p-8 mx-auto text-center glass-card rounded-xl">
+                <h2 class="mb-2 text-2xl font-bold">Selesaikan Pembayaran</h2>
+                <p class="mb-4 text-slate-500">Selesaikan pembayaran Anda melalui <strong id="va-method-display"></strong>.</p>
+                
+                <div class="p-6 my-4 text-left bg-white border rounded-lg border-slate-200">
+                    <p class="text-sm text-slate-500">Nomor Virtual Account</p>
+                    <div class="flex items-center justify-between mt-1">
+                        <p class="text-2xl font-bold tracking-wider text-slate-800" id="va-number-display"></p>
+                        <button onclick="copyToClipboard(document.getElementById('va-number-display').textContent, 'Nomor VA')" class="p-2 transition rounded-lg hover:bg-slate-100">
+                            <i data-feather="copy" class="w-5 h-5 text-slate-500"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-6 my-4 text-left bg-white border rounded-lg border-slate-200">
+                     <p class="text-sm text-slate-500">Total Pembayaran</p>
+                     <div class="flex items-center justify-between mt-1">
+                        <p class="text-2xl font-bold text-sky-600" id="va-payment-total"></p>
+                        <button onclick="copyToClipboard((getCartSubtotal() + serviceFee).toString(), 'Total Pembayaran')" class="p-2 transition rounded-lg hover:bg-slate-100">
+                            <i data-feather="copy" class="w-5 h-5 text-slate-500"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-3 text-sm rounded-lg bg-sky-100 text-sky-800">
+                    <p>Selesaikan pembayaran dalam <strong id="va-payment-timer">00:05</strong></p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Other Pages (Registration, News, etc.) -->
+        <section id="form-pendaftaran" class="container p-4 mx-auto page md:p-8">
+            <div class="max-w-4xl p-8 mx-auto glass-card rounded-xl">
+                <div class="mb-8 text-center">
+                    <h2 class="text-3xl font-bold md:text-4xl text-slate-800">Formulir Pendaftaran Anggota Baru</h2>
+                    <p class="mt-2 text-slate-500">Lengkapi data diri dan unggah berkas yang diperlukan untuk bergabung.</p>
+                </div>
+
+                <form id="registrationForm" class="space-y-8" novalidate>
+                    <!-- Data Diri Section -->
+                    <div>
+                        <h3 class="flex items-center mb-6 text-2xl font-semibold text-slate-700">
+                            <i data-feather="user" class="w-6 h-6 mr-3 text-sky-500"></i>
+                            Data Diri
+                        </h3>
+                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <div class="md:col-span-2">
+                                <label for="nama_lengkap" class="block mb-2 text-sm font-medium text-slate-700">Nama Lengkap</label>
+                                <input type="text" id="nama_lengkap" class="block w-full px-4 py-3 bg-white border rounded-lg shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required placeholder="Masukkan nama lengkap Anda">
+                            </div>
+                            <!-- NEW FIELDS: Tempat & Tanggal Lahir -->
+                            <div>
+                                <label for="tempat_lahir" class="block mb-2 text-sm font-medium text-slate-700">Tempat Lahir</label>
+                                <input type="text" id="tempat_lahir" class="block w-full px-4 py-3 bg-white border rounded-lg shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required placeholder="Contoh: Yogyakarta">
+                            </div>
+                            <div>
+                                <label for="tanggal_lahir" class="block mb-2 text-sm font-medium text-slate-700">Tanggal Lahir</label>
+                                <input type="date" id="tanggal_lahir" class="block w-full px-4 py-3 bg-white border rounded-lg shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required>
+                            </div>
+                            <!-- END NEW FIELDS -->
+                            <div>
+                                <label for="nim" class="block mb-2 text-sm font-medium text-slate-700">NIM / No. Mahasiswa</label>
+                                <input type="text" id="nim" class="block w-full px-4 py-3 bg-white border rounded-lg shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required placeholder="Contoh: 20230510XXX">
+                            </div>
+                            <div>
+                                <label for="phone" class="block mb-2 text-sm font-medium text-slate-700">Nomor Telepon</label>
+                                <input type="tel" id="phone" class="block w-full px-4 py-3 bg-white border rounded-lg shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required placeholder="Contoh: 081234567890">
+                            </div>
+                             <div>
+                                <label for="fakultas" class="block mb-2 text-sm font-medium text-slate-700">Fakultas</label>
+                                <input type="text" id="fakultas" class="block w-full px-4 py-3 bg-white border rounded-lg shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required placeholder="Contoh: Fakultas Teknik">
+                            </div>
+                            <div>
+                                <label for="prodi" class="block mb-2 text-sm font-medium text-slate-700">Program Studi</label>
+                                <input type="text" id="prodi" class="block w-full px-4 py-3 bg-white border rounded-lg shadow-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required placeholder="Contoh: Teknik Informatika">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Berkas Pendaftaran Section -->
+                    <div>
+                         <h3 class="flex items-center mb-6 text-2xl font-semibold text-slate-700">
+                            <i data-feather="file-text" class="w-6 h-6 mr-3 text-sky-500"></i>
+                            Berkas Pendaftaran
+                        </h3>
+                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-slate-700">Unggah Foto Diri (3x4)</label>
+                                <input type="file" id="upload-foto" class="hidden" accept="image/*" data-filename-target="filename-foto" required>
+                                <label for="upload-foto" class="file-input-label">
+                                    <i data-feather="upload-cloud" class="w-5 h-5 mr-2"></i> Pilih Berkas...
+                                </label>
+                                <span id="filename-foto" class="file-input-filename">Tidak ada berkas terpilih</span>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-slate-700">Unggah KTM</label>
+                                <input type="file" id="upload-ktm" class="hidden" accept="image/*,.pdf" data-filename-target="filename-ktm" required>
+                                <label for="upload-ktm" class="file-input-label">
+                                    <i data-feather="upload-cloud" class="w-5 h-5 mr-2"></i> Pilih Berkas...
+                                </label>
+                                <span id="filename-ktm" class="file-input-filename">Tidak ada berkas terpilih</span>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-slate-700">Unggah Sertifikat <span class="font-normal text-slate-500">(Opsional)</span></label>
+                                <input type="file" id="upload-sertifikat" class="hidden" accept="image/*,.pdf" data-filename-target="filename-sertifikat">
+                                <label for="upload-sertifikat" class="file-input-label">
+                                    <i data-feather="upload-cloud" class="w-5 h-5 mr-2"></i> Pilih Berkas...
+                                </label>
+                                <span id="filename-sertifikat" class="file-input-filename">Tidak ada berkas terpilih</span>
+                            </div>
+                             <div>
+                                <label class="block mb-2 text-sm font-medium text-slate-700">Unggah Bukti Pembayaran</label>
+                                <input type="file" id="upload-bukti" class="hidden" accept="image/*,.pdf" data-filename-target="filename-bukti" required>
+                                <label for="upload-bukti" class="file-input-label">
+                                    <i data-feather="upload-cloud" class="w-5 h-5 mr-2"></i> Pilih Berkas...
+                                </label>
+                                <span id="filename-bukti" class="file-input-filename">Tidak ada berkas terpilih</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 text-right border-t border-slate-200">
+                        <button type="submit" class="inline-flex items-center justify-center w-full px-8 py-3 font-bold text-white transition-transform transform rounded-lg shadow-lg md:w-auto btn-gradient hover:scale-105">
+                            <i data-feather="send" class="w-5 h-5 mr-2"></i>
+                            Kirim Pendaftaran
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+        
+        <section id="cek-status" class="container p-4 mx-auto page md:p-8">
+            <div class="max-w-2xl p-8 mx-auto glass-card rounded-xl">
+                <div class="text-center">
+                    <h2 class="mb-2 text-3xl font-bold text-slate-800">Cek Status Pendaftaran</h2>
+                    <p class="mb-8 text-slate-500">Masukkan NIM Anda untuk melihat status pendaftaran Anda.</p>
+                </div>
+                <form id="statusCheckForm" class="w-full max-w-lg mx-auto">
+                    <div class="relative flex items-center">
+                        <input type="text" id="nim_cek" class="w-full px-5 py-4 pr-32 text-lg bg-white border rounded-full shadow-inner border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" required placeholder="Masukkan NIM Anda...">
+                        <button type="submit" class="absolute right-2.5 flex items-center justify-center h-12 px-6 font-bold text-white transition-transform transform rounded-full shadow-lg btn-gradient hover:scale-105">
+                            <i data-feather="search" class="w-5 h-5 mr-2"></i>
+                            <span>Cek</span>
+                        </button>
+                    </div>
+                </form>
+                <div id="statusResult" class="mt-8"></div>
+            </div>
+        </section>
+
+        <section id="berita" class="container p-4 mx-auto page md:p-8">
+            <div class="mb-12 text-center">
+                <h2 class="text-4xl font-bold text-slate-800">Berita & Informasi</h2>
+                <p class="mt-2 text-lg text-slate-600">Ikuti perkembangan terbaru dari UKM PSM Sunshine Voice.</p>
+            </div>
+            
+            <div class="grid gap-8 lg:grid-cols-3 md:grid-cols-2">
+                <!-- News Card 1 -->
+                <div class="flex flex-col overflow-hidden transition duration-300 transform glass-card rounded-xl hover:-translate-y-2">
+                    <img src="event.jpg" class="object-cover w-full h-48 rounded-t-xl" alt="Paduan suara memenangkan penghargaan">
+                    <div class="flex flex-col flex-grow p-6">
+                        <span class="text-sm font-semibold text-sky-600">KOMPETISI</span>
+                        <h3 class="my-2 text-xl font-bold">Sunshine Voice Raih Juara 1 di Festival Nasional</h3>
+                        <p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 20 Juli 2025</p>
+                        <p class="flex-grow mb-4 text-slate-700 line-clamp-3">Dengan bangga kami umumkan bahwa PSM Sunshine Voice berhasil membawa pulang piala Juara Pertama dalam ajang Festival Paduan Suara Nasional 2025 di Jakarta. Kemenangan ini adalah buah dari kerja keras...</p>
+                        <button onclick="openBeritaDetail('fest-nasional-2025')" class="self-start mt-auto font-semibold transition-colors text-sky-600 hover:text-sky-700">Baca Selengkapnya &rarr;</button>
+                    </div>
+                </div>
+
+                <!-- News Card 2 -->
+                <div class="flex flex-col overflow-hidden transition duration-300 transform glass-card rounded-xl hover:-translate-y-2">
+                    <img src="pendaftaran.jpg" class="object-cover w-full h-48 rounded-t-xl" alt="Poster audisi paduan suara">
+                    <div class="flex flex-col flex-grow p-6">
+                        <span class="text-sm font-semibold text-sky-600">PENDAFTARAN</span>
+                        <h3 class="my-2 text-xl font-bold">Audisi Terbuka Anggota Baru Angkatan 2025</h3>
+                        <p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 15 Juni 2025</p>
+                        <p class="flex-grow mb-4 text-slate-700 line-clamp-3">Kami membuka pintu bagi talenta-talenta baru untuk bergabung! Audisi akan dilaksanakan pada awal semester ganjil. Siapkan dirimu dan pantau terus informasinya di sini untuk detail lebih lanjut.</p>
+                        <button onclick="openBeritaDetail('audisi-2025')" class="self-start mt-auto font-semibold transition-colors text-sky-600 hover:text-sky-700">Baca Selengkapnya &rarr;</button>
+                    </div>
+                </div>
+
+                <!-- News Card 3 -->
+                <div class="flex flex-col overflow-hidden transition duration-300 transform glass-card rounded-xl hover:-translate-y-2">
+                    <img src="kolaborasi.jpg" class="object-cover w-full h-48 rounded-t-xl" alt="Paduan suara berkolaborasi dengan orkestra">
+                    <div class="flex flex-col flex-grow p-6">
+                        <span class="text-sm font-semibold text-sky-600">EVENT</span>
+                        <h3 class="my-2 text-xl font-bold">Kolaborasi Spektakuler dengan Orkestra Kota</h3>
+                        <p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 5 Mei 2025</p>
+                        <p class="flex-grow mb-4 text-slate-700 line-clamp-3">Sebuah kehormatan bagi kami untuk bisa berkolaborasi dalam sebuah konser megah bersama orkestra ternama kota. Acara ini akan menjadi perpaduan harmonis antara vokal dan instrumen.</p>
+                        <button onclick="openBeritaDetail('kolaborasi-orkestra')" class="self-start mt-auto font-semibold transition-colors text-sky-600 hover:text-sky-700">Baca Selengkapnya &rarr;</button>
+                    </div>
+                </div>
+
+                <!-- News Card 4 -->
+                <div class="flex flex-col overflow-hidden transition duration-300 transform glass-card rounded-xl hover:-translate-y-2">
+                    <img src="workshop.jpg" class="object-cover w-full h-48 rounded-t-xl" alt="Workshop vokal">
+                    <div class="flex flex-col flex-grow p-6">
+                        <span class="text-sm font-semibold text-sky-600">KEGIATAN</span>
+                        <h3 class="my-2 text-xl font-bold">Workshop Vokal bersama Maestro Ternama</h3>
+                        <p class="mb-4 text-sm text-slate-600"><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> 18 April 2025</p>
+                        <p class="flex-grow mb-4 text-slate-700 line-clamp-3">Seluruh anggota mengikuti workshop vokal intensif yang dibimbing langsung oleh maestro paduan suara, Bapak Tjahjo Widodo. Kegiatan ini bertujuan untuk meningkatkan kualitas vokal dan pemahaman musik.</p>
+                        <button onclick="openBeritaDetail('workshop-vokal')" class="self-start mt-auto font-semibold transition-colors text-sky-600 hover:text-sky-700">Baca Selengkapnya &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- News Detail Page -->
+        <section id="berita-detail" class="container p-4 mx-auto page md:p-8">
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
+                <!-- Main Article Content -->
+                <div class="lg:col-span-2">
+                    <div class="mb-6">
+                        <button onclick="switchPage('berita')" class="inline-flex items-center px-4 py-2 text-sm font-semibold transition bg-white border rounded-lg shadow-sm text-slate-700 border-slate-300 hover:bg-slate-50">
+                            <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i>
+                            Kembali ke semua berita
+                        </button>
+                    </div>
+                    <article class="p-8 bg-white border rounded-xl border-slate-200">
+                        <header class="mb-6">
+                            <p id="berita-detail-category" class="mb-2 text-sm font-bold tracking-widest uppercase text-sky-600"></p>
+                            <h1 id="berita-detail-title" class="mb-4 text-3xl font-bold leading-tight md:text-4xl text-slate-900"></h1>
+                            <div class="flex items-center text-sm text-slate-500">
+                                <p><i data-feather="calendar" class="inline-block w-4 h-4 mr-1"></i> Tanggal Publikasi: <span id="berita-detail-date" class="font-medium"></span></p>
+                            </div>
+                        </header>
+                         <figure>
+                            <img id="berita-detail-image" src="" alt="Gambar utama berita" class="object-cover w-full mb-2 shadow-lg h-80 rounded-xl">
+                        </figure>
+
+                        <div id="berita-detail-content" class="mt-8 text-base leading-relaxed article-content text-slate-700 md:text-lg">
+                            <!-- Konten artikel akan dimasukkan di sini oleh JavaScript -->
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Sidebar for Other News -->
+                <aside class="lg:col-span-1">
+                    <div class="sticky top-28">
+                        <div class="p-6 border rounded-xl glass-card">
+                             <h2 class="pb-4 mb-4 text-2xl font-bold border-b text-slate-800 border-slate-300">Berita Lainnya</h2>
+                            <div id="berita-lainnya-container" class="space-y-6">
+                                <!-- Kartu berita lainnya akan dimasukkan di sini -->
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section id="pengumuman" class="container p-4 mx-auto page md:p-8">
+            <h2 class="mb-6 text-3xl font-bold text-center">Pengumuman</h2>
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="p-4 border-l-4 rounded-r-lg text-sky-800 bg-sky-100 border-sky-500" role="alert">
+                    <p class="font-bold">Info: Penjualan Tiket Konser SARAYA #2</p>
+                    <p>Penjualan Tiket Event Konser SARAYA #2 akan dibuka mulai hari Senin, 7 Juli 2025 pukul 12.00 WIB.</p>
+                    <p class="mt-2 text-sm text-sky-700">Diposting: 30 Juni 2025</p>
+                </div>
+                <div class="p-4 border-l-4 rounded-r-lg text-sky-800 bg-sky-100 border-sky-500" role="alert">
+                    <p class="font-bold">Info: Hasil Seleksi Berkas Angkatan 2025</p>
+                    <p>Hasil seleksi berkas pendaftaran angkatan 2025 telah diumumkan. Silakan cek status pendaftaran Anda melalui halaman Pendaftaran.</p>
+                    <p class="mt-2 text-sm text-sky-700">Diposting: 27 Juni 2025</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="gallery" class="container p-4 mx-auto page md:p-8">
+            <h2 class="mb-6 text-3xl font-bold text-center">Galeri Kegiatan</h2>
+            <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 gallery-container">
+                <div class="overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                    <img src="galeri1.jpg" alt="Foto galeri paduan suara 1" class="object-cover w-full h-full transition duration-300 transform group-hover:scale-110" data-caption="Anggota PSM Sunshine Voice saat tampil di atas panggung.">
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                    <img src="galeri2.jpg" alt="Foto galeri paduan suara 2" class="object-cover w-full h-full transition duration-300 transform group-hover:scale-110" data-caption="Sesi latihan vokal bersama pelatih.">
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                    <img src="galeri3.jpg" alt="Foto galeri paduan suara 3" class="object-cover w-full h-full transition duration-300 transform group-hover:scale-110" data-caption="Momen kebersamaan tim setelah konser.">
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                    <img src="galeri4.jpg" alt="Foto galeri paduan suara 4" class="object-cover w-full h-full transition duration-300 transform group-hover:scale-110" data-caption="Penampilan di acara wisuda universitas.">
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                    <img src="galeri5.jpg" alt="Foto galeri paduan suara 5" class="object-cover w-full h-full transition duration-300 transform group-hover:scale-110" data-caption="Konser tahunan dengan tata panggung yang megah.">
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                    <img src="galeri6.jpg" alt="Foto galeri paduan suara 6" class="object-cover w-full h-full transition duration-300 transform group-hover:scale-110" data-caption="Ekspresi penuh penjiwaan dari salah satu anggota.">
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                    <img src="galeri7.jpg" alt="Foto galeri paduan suara 7" class="object-cover w-full h-full transition duration-300 transform group-hover:scale-110" data-caption="Tim sopran dalam sesi latihan intensif.">
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                    <img src="galeri8.jpg" alt="Foto galeri paduan suara 8" class="object-cover w-full h-full transition duration-300 transform group-hover:scale-110" data-caption="Perayaan kemenangan setelah kompetisi nasional.">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- NEW: Lightbox Modal for Gallery -->
+    <div id="lightbox" class="fixed inset-0 items-center justify-center hidden p-4 bg-black bg-opacity-80 lightbox">
+        <div class="relative w-full max-w-4xl text-center transform scale-95 opacity-0 lightbox-content">
+            <button id="lightbox-close" class="absolute z-10 p-2 text-white rounded-full -top-2 -right-2 bg-slate-800 hover:bg-slate-700 focus:outline-none">&times;</button>
+            <img id="lightbox-img" src="" alt="Gambar galeri yang diperbesar" class="object-contain w-full rounded-lg shadow-xl max-h-[80vh]">
+            <div id="lightbox-caption" class="px-4 py-2 mt-4 text-white bg-black bg-opacity-50 rounded-lg inline-block-max-w-full"></div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="pt-16 pb-8 text-gray-400 bg-gray-900">
+        <div class="container px-6 mx-auto">
+            <div class="grid gap-12 mb-12 lg:grid-cols-12">
+                <div class="col-span-12 lg:col-span-4">
+                     <a href="#" class="flex items-center mb-4 space-x-3" onclick="switchPage('home')">
+                         <img src="https://pbs.twimg.com/profile_images/735053432403283968/RBGDrLXf_400x400.jpg" alt="Logo PSM SSV UMY" class="w-12 h-12 bg-white border-2 border-gray-700 rounded-full">
+                         <span class="text-xl font-bold text-white">PSM Sunshine Voice</span>
+                    </a>
+                    <p class="text-gray-500">Wadah bagi mahasiswa untuk menyalurkan minat dan bakat di bidang tarik suara, membangun karakter, dan kerjasama tim.</p>
+                </div>
+                <div class="col-span-6 lg:col-span-2">
+                    <h3 class="mb-4 font-semibold text-white">Navigasi</h3>
+                    <div class="flex flex-col space-y-3">
+                        <a href="#" class="hover:text-white" onclick="switchPage('berita')">Berita</a>
+                        <a href="#" class="hover:text-white" onclick="switchPage('gallery')">Galeri</a>
+                        <a href="#" class="hover:text-white" onclick="switchPage('events')">Event</a>
+                        <a href="#" class="hover:text-white" onclick="switchPage('form-pendaftaran')">Pendaftaran</a>
+                    </div>
+                </div>
+                <div class="col-span-6 lg:col-span-3">
+                    <h3 class="mb-4 font-semibold text-white">Hubungi Kami</h3>
+                    <div class="flex flex-col space-y-3">
+                        <a href="mailto:psmssv.umy@gmail.com" class="flex items-center hover:text-white">
+                            <i data-feather="mail" class="w-4 h-4 mr-3"></i>psmssv.umy@gmail.com
+                        </a>
+                        <p class="flex items-center"><i data-feather="map-pin" class="w-4 h-4 mr-3"></i>Gedung UKM Center UMY</p>
+                    </div>
+                </div>
+                <div class="col-span-12 lg:col-span-3">
+                     <h3 class="mb-4 font-semibold text-white">Media Sosial</h3>
+                     <div class="flex mt-4 space-x-4">
+                        <a href="#" class="flex items-center justify-center w-10 h-10 text-gray-400 transition bg-gray-800 rounded-full hover:bg-sky-500 hover:text-white"><i data-feather="twitter" class="w-5 h-5"></i></a>
+                        <a href="#" class="flex items-center justify-center w-10 h-10 text-gray-400 transition bg-gray-800 rounded-full hover:bg-pink-500 hover:text-white"><i data-feather="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="flex items-center justify-center w-10 h-10 text-gray-400 transition bg-gray-800 rounded-full hover:bg-red-600 hover:text-white"><i data-feather="youtube" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 text-center text-gray-500 border-t border-gray-800">
+                <p>&copy; 2025 Sunshine Voice. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Registration Success Modal -->
+    <div id="registrationSuccessModal" class="fixed inset-0 z-[99] flex-col items-center justify-center hidden p-4 transition-opacity duration-300 bg-black bg-opacity-60">
+        <div class="w-full max-w-md p-8 text-center bg-white shadow-xl rounded-2xl">
+            <div class="flex items-center justify-center w-16 h-16 mx-auto mb-5 bg-green-100 rounded-full">
+                <i data-feather="check" class="w-10 h-10 text-green-600"></i>
+            </div>
+            <h3 class="mb-2 text-2xl font-bold text-slate-800">Pendaftaran Terkirim!</h3>
+            <p class="mb-6 text-slate-500">Terima kasih telah mendaftar. Data Anda akan segera kami proses. Silakan cek status pendaftaran Anda secara berkala.</p>
+            <button id="closeSuccessModal" class="w-full px-6 py-3 font-bold text-white transition rounded-lg btn-gradient">Kembali ke Beranda</button>
+        </div>
+    </div>
+
+    <!-- Payment Success Modal -->
+    <div id="paymentSuccessModal" class="fixed inset-0 z-[99] flex-col items-center justify-center hidden p-4 transition-opacity duration-300 bg-black bg-opacity-60">
+        <div class="w-full max-w-md p-8 text-center bg-white shadow-xl rounded-2xl">
+            <div class="flex items-center justify-center w-16 h-16 mx-auto mb-5 bg-green-100 rounded-full">
+                <i data-feather="check-circle" class="w-10 h-10 text-green-600"></i>
+            </div>
+            <h3 class="mb-2 text-2xl font-bold text-slate-800">Pembayaran Berhasil!</h3>
+            <p class="mb-6 text-slate-500">Terima kasih! Silakan cek e-ticket Anda di email yang telah didaftarkan.</p>
+            <button id="closePaymentSuccessModal" class="w-full px-6 py-3 font-bold text-white transition rounded-lg btn-gradient">Kembali ke Beranda</button>
+        </div>
+    </div>
+
+
+    <!-- Payment Method Modal -->
+    <div id="payment-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-black bg-opacity-60">
+        <div class="w-full max-w-md transition-all duration-300 transform scale-95 bg-white shadow-xl opacity-0 rounded-xl">
+            <div class="flex items-center justify-between p-4 border-b border-slate-200">
+                <h3 class="text-xl font-bold">Pilih Metode Pembayaran</h3>
+                <button id="close-payment-modal-button" class="text-2xl font-bold text-slate-500 hover:text-slate-800">&times;</button>
+            </div>
+            <div class="p-6 space-y-4">
+                 <div class="space-y-2">
+                    <label class="font-semibold text-slate-700">QRIS</label>
+                    <div class="flex flex-col space-y-2">
+                        <button data-method="QRIS" class="w-full p-3 text-left border rounded-lg payment-option-btn border-slate-300 hover:bg-sky-50">QRIS (Semua E-Wallet/m-Banking)</button>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="font-semibold text-slate-700">Virtual Account</label>
+                    <div class="flex flex-col space-y-2">
+                        <button data-method="BCA Virtual Account" class="w-full p-3 text-left border rounded-lg payment-option-btn border-slate-300 hover:bg-sky-50">BCA Virtual Account</button>
+                        <button data-method="Mandiri Virtual Account" class="w-full p-3 text-left border rounded-lg payment-option-btn border-slate-300 hover:bg-sky-50">Mandiri Virtual Account</button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t bg-slate-50 rounded-b-xl border-slate-200">
+                 <button id="select-payment-method-btn" class="w-full py-3 font-bold text-white transition rounded-lg btn-gradient">Pilih</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Message Box -->
+    <div id="messageBox" class="fixed z-[99] hidden px-5 py-3 text-white transition-all duration-300 transform translate-y-16 rounded-lg shadow-xl bg-slate-900 bottom-5 right-5"><p id="messageText"></p></div>
+
+    <!-- AOS (Animate On Scroll) Library Script -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+    <script>
+        // Inisialisasi AOS
+        AOS.init({
+            duration: 800, // Durasi animasi dalam milidetik
+            once: true, // Apakah animasi hanya terjadi sekali
+            offset: 50, // Memicu animasi sedikit lebih awal
+        });
+
+        // Inisialisasi Feather Icons
+        feather.replace();
+
+        const pages = document.querySelectorAll('.page');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        // --- Mock Data untuk Berita ---
+        const newsData = {
+            'fest-nasional-2025': {
+                title: 'Sunshine Voice Raih 2 Gold Medal di Festival Swara Saraswati',
+                image: 'event.jpg',
+                category: 'KOMPETISI',
+                date: '20 Juli 2025',
+                author: 'Tim Redaksi SSV',
+                content: `
+                    <p>Dengan bangga kami umumkan bahwa PSM Sunshine Voice berhasil membawa pulang piala Juara Pertama dalam ajang Festival Paduan Suara Nasional 2025 yang diselenggarakan di Jakarta. Kemenangan ini adalah buah dari kerja keras, dedikasi, dan harmoni yang telah dibangun oleh seluruh anggota dan pelatih selama berbulan-bulan.</p>
+                    <p>Dalam kompetisi yang diikuti oleh puluhan paduan suara universitas terbaik dari seluruh Indonesia, Sunshine Voice memukau para juri dan penonton dengan membawakan lagu daerah "Cik Cik Periuk" dalam aransemen modern dan lagu wajib "Indonesia Pusaka" dengan penuh penjiwaan.</p>
+                    <h3 class="mt-6 mb-4 text-2xl font-bold">Momen Penentu Kemenangan</h3>
+                    <p>"Ini adalah mimpi yang menjadi kenyataan. Kami berlatih siang dan malam, bukan hanya untuk mengasah teknik, tetapi juga untuk membangun ikatan dan menyampaikan pesan melalui setiap nada. Terima kasih atas dukungan universitas dan semua pihak yang telah mendoakan kami," ujar sang konduktor, Budi Santoso, dengan mata berkaca-kaca saat menerima penghargaan.</p>
+                `
+            },
+            'audisi-2025': {
+                title: 'Audisi Terbuka Anggota Baru Angkatan 2025',
+                image: 'pendaftaran.jpg',
+                category: 'PENDAFTARAN',
+                date: '15 Juni 2025',
+                author: 'Admin Pendaftaran',
+                content: `
+                    <p>Kami membuka pintu bagi talenta-talenta baru untuk bergabung dengan keluarga besar PSM Sunshine Voice! Audisi akan dilaksanakan pada awal semester ganjil mendatang. Ini adalah kesempatan emas bagi Anda yang memiliki passion di dunia tarik suara untuk berkembang bersama kami.</p>
+                    <p>Siapkan dirimu dan pantau terus informasinya di sini untuk detail lebih lanjut mengenai jadwal, persyaratan, dan materi audisi. Jangan lewatkan kesempatan untuk menjadi bagian dari perjalanan musikal kami yang luar biasa!</p>
+                `
+            },
+            'kolaborasi-orkestra': {
+                title: 'Kolaborasi Spektakuler dengan Orkestra Kota',
+                image: 'kolaborasi.jpg',
+                category: 'EVENT',
+                date: '5 Mei 2025',
+                author: 'Manajer Event',
+                content: `
+                    <p>Sebuah kehormatan bagi kami untuk bisa berkolaborasi dalam sebuah konser megah bersama orkestra ternama di kota ini. Acara yang bertajuk "Symphony of Voices" ini akan menjadi perpaduan harmonis antara kekuatan vokal paduan suara dan kekayaan instrumen orkestra.</p>
+                    <p>Konser ini akan menampilkan karya-karya klasik dan kontemporer yang diaransemen ulang secara eksklusif untuk pertunjukan ini. Ini adalah proyek ambisius yang kami yakini akan memberikan pengalaman musikal yang tak terlupakan bagi para penonton.</p>
+                `
+            },
+            'workshop-vokal': {
+                title: 'Workshop Vokal bersama Maestro Ternama',
+                image: 'workshop.jpg',
+                category: 'KEGIATAN',
+                date: '18 April 2025',
+                author: 'Divisi Pelatihan',
+                content: `
+                    <p>Dalam rangka meningkatkan kualitas dan kapasitas anggota, PSM Sunshine Voice baru saja menyelenggarakan workshop vokal intensif. Kegiatan ini dibimbing langsung oleh maestro paduan suara ternama Indonesia, Bapak Tjahjo Widodo.</p>
+                    <p>Selama dua hari penuh, seluruh anggota mendapatkan materi mendalam mengenai teknik pernapasan, intonasi, interpretasi lagu, dan dinamika panggung. Workshop ini diharapkan dapat menjadi bekal berharga bagi anggota dalam menghadapi kompetisi dan pertunjukan di masa depan.</p>
+                `
+            }
+        };
+
+
+        function setActiveLink(pageId) {
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                // For main links
+                if (link.dataset.page === pageId) {
+                    link.classList.add('active');
+                }
+                 // Handle dropdown parent
+                const parentAttribute = link.getAttribute('data-page-parent');
+                if (parentAttribute) {
+                    const childPages = ['form-pendaftaran', 'cek-status'];
+                    if (childPages.includes(pageId)) {
+                        link.classList.add('active');
+                    }
+                }
+                // Highlight 'Berita' when viewing a detail
+                if (pageId === 'berita-detail' && link.dataset.page === 'berita') {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function switchPage(pageId) {
+            pages.forEach(page => page.classList.remove('active'));
+            const activePage = document.getElementById(pageId);
+            if (activePage) activePage.classList.add('active');
+            
+            setActiveLink(pageId);
+            
+            const mainElement = document.querySelector('main');
+             // The 'home' page has its own full-width sections, others are contained
+            if (pageId === 'home') {
+                 mainElement.classList.remove('container', 'mx-auto', 'p-4', 'md:p-8');
+            } else {
+                 mainElement.classList.add('container', 'mx-auto', 'p-4', 'md:p-8');
+            }
+
+            mobileMenu.classList.add('hidden'); // Hide mobile menu on navigation
+            window.scrollTo(0, 0); // Scroll to top
+            setTimeout(() => {
+                feather.replace(); // Re-run Feather Icons
+                AOS.refresh(); // Refresh AOS untuk mendeteksi elemen di halaman baru
+            }, 0);
+        }
+
+        function openBeritaDetail(newsId) {
+            const article = newsData[newsId];
+            if (!article) {
+                console.error("Berita tidak ditemukan!");
+                return;
+            }
+
+            // Populate detail page elements
+            document.getElementById('berita-detail-image').src = article.image;
+            document.getElementById('berita-detail-image').alt = `Gambar untuk ${article.title}`;
+            document.getElementById('berita-detail-category').textContent = article.category;
+            document.getElementById('berita-detail-title').textContent = article.title;
+            document.getElementById('berita-detail-date').textContent = article.date;
+            document.getElementById('berita-detail-content').innerHTML = article.content;
+            
+            // Populate sidebar news
+            populateSidebarNews(newsId);
+
+            switchPage('berita-detail');
+        }
+
+        function populateSidebarNews(currentNewsId) {
+            const container = document.getElementById('berita-lainnya-container');
+            container.innerHTML = '';
+            const allNewsKeys = Object.keys(newsData);
+            const otherNewsKeys = allNewsKeys.filter(key => key !== currentNewsId).slice(0, 3); // Show 3 other articles
+
+            if (otherNewsKeys.length === 0) {
+                 container.innerHTML = '<p class="text-slate-500">Tidak ada berita lainnya.</p>';
+                 return;
+            }
+
+            otherNewsKeys.forEach(key => {
+                const article = newsData[key];
+                const cardHTML = `
+                    <a href="#" onclick="event.preventDefault(); openBeritaDetail('${key}')" class="flex items-center p-3 -m-3 transition duration-300 rounded-lg group hover:bg-white/50">
+                        <img src="${article.image}" class="object-cover w-16 h-16 rounded-md shadow-sm" alt="${article.title}">
+                        <div class="ml-4">
+                            <p class="text-xs font-semibold uppercase text-sky-600">${article.category}</p>
+                            <h4 class="font-bold leading-tight text-slate-800 group-hover:text-sky-700">${article.title}</h4>
+                            <p class="text-xs text-slate-500">${article.date}</p>
+                        </div>
+                    </a>
+                `;
+                container.innerHTML += cardHTML;
+            });
+             feather.replace();
+        }
+
+
+        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+        // Dropdown menu logic
+        const dropdownButton = document.getElementById('dropdown-button');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        const dropdownContainer = document.getElementById('dropdown-container');
+
+        dropdownContainer.addEventListener('click', (event) => {
+            event.stopPropagation();
+            dropdownMenu.classList.toggle('hidden');
+        });
+        window.addEventListener('click', () => dropdownMenu.classList.add('hidden'));
+
+        function handleDropdownLinkClick(pageId) {
+            switchPage(pageId);
+            dropdownMenu.classList.add('hidden');
+        }
+
+        // --- Ticket Selection & Payment Logic ---
+        const ticketCart = {
+            regular: { name: 'Regular', price: 75000, quantity: 0 },
+            vip: { name: 'VIP', price: 150000, quantity: 0 },
+        };
+        let currentPaymentMethod = 'QRIS';
+        const serviceFee = 2500;
+        let paymentTimerInterval;
+
+        const ticketListContainer = document.getElementById('ticket-list');
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        }
+        
+        function getCartSubtotal() {
+            return Object.values(ticketCart).reduce((sum, ticket) => sum + (ticket.price * ticket.quantity), 0);
+        }
+
+        function populateSummary(summaryContainer, totalContainer, withFee = false) {
+            if(!summaryContainer || !totalContainer) return 0;
+            summaryContainer.innerHTML = '';
+            const subtotal = getCartSubtotal();
+            let totalQuantity = 0;
+            const placeholder = '<p class="text-slate-500">Belum ada tiket yang dipilih.</p>';
+            let summaryHTML = '';
+
+            for (const ticketType in ticketCart) {
+                const ticket = ticketCart[ticketType];
+                totalQuantity += ticket.quantity;
+                if (ticket.quantity > 0) {
+                    const ticketSubtotal = ticket.price * ticket.quantity;
+                    const quantityDisplay = document.getElementById(`quantity-${ticketType}`);
+                    if(quantityDisplay) quantityDisplay.textContent = ticket.quantity;
+
+                    summaryHTML += `
+                        <div class="flex items-center justify-between text-sm">
+                            <p class="font-semibold text-slate-800">${ticket.name} <span class="font-normal text-slate-500">x${ticket.quantity}</span></p>
+                            <p class="text-slate-700">${formatRupiah(ticketSubtotal)}</p>
+                        </div>
+                    `;
+                } else {
+                     const quantityDisplay = document.getElementById(`quantity-${ticketType}`);
+                     if(quantityDisplay) quantityDisplay.textContent = 0;
+                }
+            }
+            summaryContainer.innerHTML = summaryHTML || placeholder;
+            
+            if(withFee) {
+                const total = subtotal + serviceFee;
+                document.getElementById('payment-subtotal').textContent = formatRupiah(subtotal);
+                document.getElementById('payment-fee').textContent = formatRupiah(serviceFee);
+                totalContainer.textContent = formatRupiah(total);
+            } else {
+                totalContainer.textContent = formatRupiah(subtotal);
+            }
+            return totalQuantity;
+        }
+
+        function updateCartUI() {
+            if (!document.getElementById('order-summary-items')) return;
+            const totalQuantity = populateSummary(document.getElementById('order-summary-items'), document.getElementById('total-price'));
+            const checkoutButton = document.getElementById('to-checkout-button');
+            if (checkoutButton) checkoutButton.disabled = totalQuantity === 0;
+        }
+
+        if (ticketListContainer) {
+            ticketListContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('button');
+                if (!button || !button.dataset.ticket) return;
+                const ticketType = button.dataset.ticket;
+                const action = button.dataset.action;
+
+                if (ticketType && ticketCart[ticketType]) {
+                    if (action === 'plus') ticketCart[ticketType].quantity++;
+                    else if (action === 'minus' && ticketCart[ticketType].quantity > 0) ticketCart[ticketType].quantity--;
+                    updateCartUI();
+                }
+            });
+        }
+        
+        document.getElementById('to-checkout-button')?.addEventListener('click', () => {
+             populateSummary(document.getElementById('checkout-summary-items'), document.getElementById('checkout-total-price'));
+             switchPage('checkout-page');
+        });
+
+        document.getElementById('checkoutForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('confirm-name').textContent = this.elements['checkout-name'].value;
+            document.getElementById('confirm-email').textContent = this.elements['checkout-email'].value;
+            document.getElementById('confirm-phone').textContent = this.elements['checkout-phone'].value;
+            document.getElementById('confirm-id').textContent = this.elements['checkout-id'].value;
+            populateSummary(document.getElementById('confirmation-summary-items'), document.getElementById('confirmation-total-price'));
+            switchPage('payment-confirmation');
+        });
+
+        document.getElementById('to-payment-method-button')?.addEventListener('click', () => {
+            populateSummary(document.getElementById('payment-method-summary-items'), document.getElementById('payment-total-price'), true);
+            switchPage('payment-method-page');
+        });
+        
+        document.getElementById('pay-now-final-button')?.addEventListener('click', () => {
+            const total = getCartSubtotal() + serviceFee;
+
+            if (currentPaymentMethod.toLowerCase().includes('virtual account')) {
+                document.getElementById('va-method-display').textContent = currentPaymentMethod;
+                document.getElementById('va-number-display').textContent = '8808' + Math.floor(100000000 + Math.random() * 900000000); // Mock VA Number
+                document.getElementById('va-payment-total').textContent = formatRupiah(total);
+                startPaymentTimer('va-payment-timer');
+                switchPage('va-payment-page');
+            } else { // Default to QRIS
+                document.getElementById('qr-payment-total').textContent = formatRupiah(total);
+                startPaymentTimer('payment-timer');
+                switchPage('qr-payment-page');
+            }
+        });
+        
+        function startPaymentTimer(timerId) {
+            clearInterval(paymentTimerInterval);
+            let time = 5; // Set timer to 5 seconds
+            const timerEl = document.getElementById(timerId);
+            if (!timerEl) return;
+
+            paymentTimerInterval = setInterval(() => {
+                const minutes = Math.floor(time / 60);
+                let seconds = time % 60;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+                timerEl.textContent = `${minutes}:${seconds}`;
+                
+                if (--time < 0) {
+                    clearInterval(paymentTimerInterval);
+                    // Automatically show success modal when timer ends
+                    finishPayment(); 
+                }
+            }, 1000);
+        }
+        
+        const paymentSuccessModal = document.getElementById('paymentSuccessModal');
+
+        function finishPayment() {
+            clearInterval(paymentTimerInterval);
+            
+            if (paymentSuccessModal) {
+                paymentSuccessModal.classList.remove('hidden');
+                paymentSuccessModal.classList.add('flex');
+                feather.replace();
+            }
+
+            // Reset cart
+            for(const type in ticketCart) ticketCart[type].quantity = 0;
+            updateCartUI();
+            
+            document.getElementById('checkoutForm')?.reset();
+        }
+        
+        document.getElementById('closePaymentSuccessModal')?.addEventListener('click', () => {
+            if (paymentSuccessModal) {
+                paymentSuccessModal.classList.add('hidden');
+                paymentSuccessModal.classList.remove('flex');
+            }
+            switchPage('home');
+        });
+
+
+        // --- Form Submission Handlers ---
+        const registrationSuccessModal = document.getElementById('registrationSuccessModal');
+        
+        document.getElementById('registrationForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Custom validation check
+            if (!this.checkValidity()) {
+                showMessage('Ada data yang belum terisi. Mohon lengkapi semua kolom wajib.');
+                // This is a good way to show users *which* fields are invalid.
+                this.reportValidity(); 
+                return; // Stop the function if the form is invalid
+            }
+            
+            // Show the success modal if validation passes
+            registrationSuccessModal.classList.remove('hidden');
+            registrationSuccessModal.classList.add('flex');
+            feather.replace();
+
+            this.reset();
+            // Reset file input display
+            document.querySelectorAll('.file-input-filename').forEach(span => {
+                span.textContent = 'Tidak ada berkas terpilih';
+            });
+        });
+
+        document.getElementById('closeSuccessModal')?.addEventListener('click', () => {
+            registrationSuccessModal.classList.add('hidden');
+            registrationSuccessModal.classList.remove('flex');
+            switchPage('home');
+        });
+
+        document.getElementById('statusCheckForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const statusResultDiv = document.getElementById('statusResult');
+            const nimCek = this.elements.nim_cek.value;
+            statusResultDiv.innerHTML = ''; // Clear previous results
+            
+            if (!nimCek) {
+                const error = { 
+                    title: 'Input Kosong', 
+                    msg: 'Harap masukkan NIM Anda untuk melakukan pengecekan.', 
+                    type: 'error' 
+                };
+                statusResultDiv.innerHTML = createStatusCard(error);
+                feather.replace();
+                return;
+            }
+
+            // Mock random status
+            const statuses = [
+                { title: 'Status: Diterima', msg: 'Selamat! Pendaftaran Anda diterima. Informasi lebih lanjut mengenai jadwal audisi akan dikirimkan melalui email.', type: 'success' },
+                { title: 'Status: Dalam Proses', msg: 'Pendaftaran Anda sedang dalam proses verifikasi oleh tim kami. Mohon ditunggu dan cek kembali secara berkala.', type: 'pending' },
+                { title: 'Status: Tidak Diterima', msg: 'Mohon maaf, setelah melalui proses seleksi, pendaftaran Anda belum dapat kami terima saat ini. Tetap semangat dan jangan ragu untuk mencoba di kesempatan berikutnya.', type: 'error' },
+                { title: 'Status: Tidak Ditemukan', msg: 'Maaf, NIM yang Anda masukkan tidak ditemukan dalam database pendaftar kami. Mohon periksa kembali NIM Anda.', type: 'error' }
+            ];
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            statusResultDiv.innerHTML = createStatusCard(randomStatus);
+            feather.replace(); // Re-initialize icons for the new card
+        });
+
+        function createStatusCard(status) {
+            const config = {
+                success: {
+                    icon: 'check-circle',
+                    iconColor: 'text-green-500',
+                    bgColor: 'bg-green-50',
+                    borderColor: 'border-green-400',
+                    titleColor: 'text-green-800'
+                },
+                pending: {
+                    icon: 'clock',
+                    iconColor: 'text-yellow-500',
+                    bgColor: 'bg-yellow-50',
+                    borderColor: 'border-yellow-400',
+                    titleColor: 'text-yellow-800'
+                },
+                error: {
+                    icon: 'x-circle',
+                    iconColor: 'text-red-500',
+                    bgColor: 'bg-red-50',
+                    borderColor: 'border-red-400',
+                    titleColor: 'text-red-800'
+                }
+            };
+            const theme = config[status.type] || config.error;
+
+            return `
+                <div class="flex p-4 border-l-4 rounded-r-lg shadow-md ${theme.bgColor} ${theme.borderColor}">
+                    <div class="mr-4">
+                        <i data-feather="${theme.icon}" class="w-8 h-8 ${theme.iconColor}"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold ${theme.titleColor}">${status.title}</h4>
+                        <p class="mt-1 text-slate-600">${status.msg}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // --- Payment Modal Logic ---
+        const paymentModal = document.getElementById('payment-modal');
+        const paymentModalContent = paymentModal?.querySelector('div > div');
+
+        function showPaymentModal() {
+            if(!paymentModal || !paymentModalContent) return;
+            paymentModal.classList.remove('hidden');
+            setTimeout(() => paymentModalContent.classList.remove('scale-95', 'opacity-0'), 10);
+        }
+        function closePaymentModal() {
+            if(!paymentModal || !paymentModalContent) return;
+            paymentModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => paymentModal.classList.add('hidden'), 300);
+        }
+
+        document.getElementById('show-payment-modal-button')?.addEventListener('click', showPaymentModal);
+        document.getElementById('close-payment-modal-button')?.addEventListener('click', closePaymentModal);
+        
+        let tempPaymentMethod = currentPaymentMethod;
+
+        paymentModal?.querySelectorAll('.payment-option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                 paymentModal.querySelectorAll('.payment-option-btn').forEach(b => b.classList.remove('bg-sky-100', 'ring-2', 'ring-sky-500'));
+                 btn.classList.add('bg-sky-100', 'ring-2', 'ring-sky-500');
+                 tempPaymentMethod = btn.dataset.method;
+            });
+        });
+
+        document.getElementById('select-payment-method-btn')?.addEventListener('click', () => {
+            currentPaymentMethod = tempPaymentMethod;
+            document.getElementById('selected-payment-method').textContent = currentPaymentMethod;
+            document.getElementById('pay-now-final-button').textContent = `Bayar dengan ${currentPaymentMethod}`;
+            closePaymentModal();
+        });
+
+
+        // --- Custom Message Box & Clipboard ---
+        const messageBox = document.getElementById('messageBox');
+        let messageTimeout;
+        function showMessage(message) {
+            if(!messageBox) return;
+            messageBox.querySelector('p').textContent = message;
+            messageBox.classList.remove('hidden');
+            setTimeout(() => messageBox.classList.remove('translate-y-16'), 10);
+            clearTimeout(messageTimeout);
+            messageTimeout = setTimeout(() => {
+                messageBox.classList.add('translate-y-16');
+                setTimeout(() => messageBox.classList.add('hidden'), 300);
+            }, 3000);
+        }
+
+        function copyToClipboard(text, entityName = 'Teks') {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; 
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showMessage(`${entityName} berhasil disalin!`);
+            } catch (err) {
+                showMessage('Gagal menyalin.');
+            }
+            document.body.removeChild(textArea);
+        }
+        
+        // --- File Input Handler ---
+        document.querySelectorAll('input[type="file"]').forEach(fileInput => {
+            fileInput.addEventListener('change', (e) => {
+                const targetId = e.target.dataset.filenameTarget;
+                const filenameSpan = document.getElementById(targetId);
+                if (e.target.files.length > 0) {
+                    filenameSpan.textContent = e.target.files[0].name;
+                } else {
+                    filenameSpan.textContent = 'Tidak ada berkas terpilih';
+                }
+            });
+        });
+        
+        // --- NEW: Lightbox Logic ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const lightboxCloseBtn = document.getElementById('lightbox-close');
+        const lightboxContent = document.querySelector('.lightbox-content');
+        const galleryContainers = document.querySelectorAll('.gallery-container');
+
+        function openLightbox(imgElement) {
+            if (!lightbox || !imgElement) return;
+            const src = imgElement.src;
+            const caption = imgElement.dataset.caption || imgElement.alt;
+            
+            lightboxImg.src = src;
+            lightboxCaption.textContent = caption;
+
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+                lightboxContent.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function closeLightbox() {
+             if (!lightbox) return;
+            lightbox.classList.add('opacity-0');
+            lightboxContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightbox.classList.remove('flex');
+            }, 300); // Wait for transition to finish
+        }
+
+        galleryContainers.forEach(container => {
+            container.addEventListener('click', (e) => {
+                const img = e.target.closest('img');
+                if (img) {
+                    openLightbox(img);
+                }
+            });
+        });
+
+        if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', closeLightbox);
+        if (lightbox) lightbox.addEventListener('click', (e) => {
+            // Close if the background overlay is clicked, not the content inside
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+
+        // --- Initial setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            switchPage('home');
+            updateCartUI();
+        });
+    </script>
+</body>
+</html>
